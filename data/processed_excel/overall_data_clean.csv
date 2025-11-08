@@ -1,0 +1,14 @@
+country,gdp_per_capita,average_household_size,ewaste_management_collection_rate,ewaste_generated_kg_inh,eee_placed_on_market_kg_inh,ewaste_formally_collected_kg_inh,generated_ewaste_plastic_kg_inh,generated_bfrs_from_ewaste_kg_inh,country_clean,iso3
+Argentina,23040.0,3.3,0.04,7.7,7.0,0.3,1.9,0.2,argentina,ARG
+Bolivia,9110.0,3.5,0.04,4.7,7.5,0.2,1.2,0.1,bolivia,BOL
+Chile,25154.0,3.6,0.05,7.9,13.4,0.4,2.1,0.2,chile,CHL
+Costa_Rica,20443.0,3.2,0.08,13.2,15.4,1.0,4.1,0.4,costarica,
+Ecuador,11878.0,3.8,0.04,5.1,7.5,0.2,1.7,0.2,ecuador,ECU
+El_Salvador,9164.0,4.1,0.01,5.0,7.5,0.1,1.5,0.1,elsalvador,
+Guatemala,17667.0,4.8,0.0,2.9,4.7,,0.9,0.1,guatemala,GTM
+Honduras,5981.0,3.9,0.01,2.6,2.9,0.1,0.8,0.6,honduras,HND
+Nicaragua,1905.26,5.0,0.004,2.5,3.2,0.01,0.8,0.1,nicaragua,NIC
+Panama,32850.0,3.7,0.002,8.6,15.2,0.02,2.5,0.2,panama,PAN
+Peru,13416.0,3.8,0.015,6.0,7.5,0.1,1.7,0.2,peru,PER
+Uruguay,24006.0,2.8,0.03,12.0,14.8,0.4,3.2,0.2,uruguay,URY
+Venezuela,17527.0,3.3,0.004,9.5,9.9,0.04,2.6,0.2,venezuela,VEN
