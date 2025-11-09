@@ -26,12 +26,12 @@ export function GoToDashboardButton() {
         >
           <button
             onClick={goToDashboard}
-            className="group relative inline-flex items-center font-unbounded font-medium text-sm"
+            className="group relative inline-flex items-center font-unbounded font-medium text-xs md:text-sm"
           >
             {/* Contenedor principal del botón */}
             <span
               className={cn(
-                "relative z-10 px-[5vw] py-[2vh]", // Usamos vw y vh para el padding
+                "relative z-10 px-4 py-2 md:px-6 md:py-3",
                 "bg-white text-woodsmoke-950",
                 "border-2 border-woodsmoke-950",
                 "shadow-[4px_4px_0px_0px_rgba(20,20,20,1)]",
@@ -44,11 +44,11 @@ export function GoToDashboardButton() {
             >
               IR AL DASHBOARD
             </span>
-            
+
             {/* Ícono que sobresale */}
             <span
               className={cn(
-                "relative z-10 px-[3vw] py-[2vh] -ml-2", // Usamos vw y vh también aquí
+                "relative z-10 px-2 py-2 md:px-3 md:py-3 -ml-2",
                 "bg-flamingo-400",
                 "border-2 border-woodsmoke-950 border-l-0",
                 "shadow-[4px_4px_0px_0px_rgba(20,20,20,1)]",
@@ -60,7 +60,7 @@ export function GoToDashboardButton() {
               )}
             >
               <svg
-                className="w-5 h-5 text-black"
+                className="w-4 h-4 md:w-5 md:h-5 text-black"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

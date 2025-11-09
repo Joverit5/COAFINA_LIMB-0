@@ -28,12 +28,12 @@ export function Navbar() {
       <div className="group relative">
         <button
           onClick={goToSelection}
-          className="relative inline-flex items-center font-unbounded font-medium text-sm"
+          className="relative inline-flex items-center font-unbounded font-medium text-xs md:text-sm"
         >
           {/* Contenedor principal del botón */}
           <span
             className={cn(
-              "relative z-10 px-6 py-3",
+              "relative z-10 px-4 py-2 md:px-6 md:py-3",
               "bg-white text-woodsmoke-950",
               "border-2 border-woodsmoke-950",
               "shadow-[4px_4px_0px_0px_rgba(20,20,20,1)]",
@@ -41,17 +41,16 @@ export function Navbar() {
               "group-hover:shadow-[6px_6px_0px_0px_rgba(20,20,20,1)]",
               "group-hover:-translate-x-0.5 group-hover:-translate-y-0.5",
               "group-active:shadow-[2px_2px_0px_0px_rgba(20,20,20,1)]",
-              "group-active:translate-x-0.5 group-active:translate-y-0.5",
-              "h-11"
+              "group-active:translate-x-0.5 group-active:translate-y-0.5"
             )}
           >
             EMPEZAR
           </span>
-          
+
           {/* Ícono que sobresale */}
           <span
             className={cn(
-              "relative z-10 px-4 py-3 -ml-2",
+              "relative z-10 px-2 py-2 md:px-3 md:py-3 -ml-2",
               "bg-flamingo-400",
               "border-2 border-woodsmoke-950 border-l-0",
               "shadow-[4px_4px_0px_0px_rgba(20,20,20,1)]",
@@ -59,12 +58,11 @@ export function Navbar() {
               "group-hover:shadow-[6px_6px_0px_0px_rgba(20,20,20,1)] ",
               "group-hover:-translate-x-0.5 group-hover:-translate-y-0.5",
               "group-active:shadow-[2px_2px_0px_0px_rgba(20,20,20,1)]",
-              "group-active:translate-x-0.5 group-active:translate-y-0.5",
-              "h-11"
+              "group-active:translate-x-0.5 group-active:translate-y-0.5"
             )}
           >
             <svg
-              className="w-5 h-5 text-black"
+              className="w-4 h-4 md:w-5 md:h-5 text-black"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

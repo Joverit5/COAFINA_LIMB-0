@@ -98,25 +98,25 @@ const ClusterCard = ({ cluster, index }) => {
   return (
     <div
       ref={cardRef}
-      className="bg-woodsmoke-900/60 backdrop-blur-sm border-2 rounded-none p-6 opacity-0"
+      className="bg-woodsmoke-900/60 backdrop-blur-sm border-2 rounded-none p-4 sm:p-6 opacity-0"
       style={{ borderColor: cluster.color }}
     >
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
         <div
-          className="w-4 h-4 rounded-full"
+          className="w-3 h-3 sm:w-4 sm:h-4 rounded-full"
           style={{ backgroundColor: cluster.color }}
         />
-        <h3 className="font-unbounded text-xl text-white">{cluster.name}</h3>
+        <h3 className="font-unbounded text-sm sm:text-xl text-white">{cluster.name}</h3>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2 sm:space-y-3">
         <div>
-          <p className="font-sans text-sm text-white/60 mb-2">Países:</p>
-          <div className="flex flex-wrap gap-2">
+          <p className="font-sans text-xs sm:text-sm text-white/60 mb-1 sm:mb-2">Países:</p>
+          <div className="flex flex-wrap gap-1 sm:gap-2">
             {cluster.countries.map((country) => (
               <span
                 key={country}
-                className="px-3 py-1 bg-white/5 border border-white/10 font-mono text-xs text-white"
+                className="px-2 py-0.5 sm:px-3 sm:py-1 bg-white/5 border border-white/10 font-mono text-[10px] sm:text-xs text-white"
               >
                 {country}
               </span>
@@ -125,11 +125,11 @@ const ClusterCard = ({ cluster, index }) => {
         </div>
 
         <div>
-          <p className="font-sans text-sm text-white/60 mb-2">Características:</p>
-          <ul className="space-y-1">
+          <p className="font-sans text-xs sm:text-sm text-white/60 mb-1 sm:mb-2">Características:</p>
+          <ul className="space-y-0.5 sm:space-y-1">
             {cluster.characteristics.map((char, i) => (
-              <li key={i} className="font-sans text-sm text-white/80 flex items-start">
-                <span className="text-flamingo-400 mr-2">•</span>
+              <li key={i} className="font-sans text-xs sm:text-sm text-white/80 flex items-start">
+                <span className="text-flamingo-400 mr-1 sm:mr-2">•</span>
                 <span>{char}</span>
               </li>
             ))}
@@ -157,11 +157,11 @@ const ComparisonChart = ({ selectedMetric }) => {
   };
 
   return (
-    <div className="bg-woodsmoke-900/40 backdrop-blur-sm border-2 border-white/10 p-6">
-      <h3 className="font-unbounded text-lg text-white mb-4">
+    <div className="bg-woodsmoke-900/40 backdrop-blur-sm border-2 border-white/10 p-4 sm:p-6">
+      <h3 className="font-unbounded text-sm sm:text-lg text-white mb-3 sm:mb-4">
         {metricLabels[selectedMetric]}
       </h3>
-      <ResponsiveContainer width="100%" height={400}>
+      <ResponsiveContainer width="100%" height={300} className="sm:h-[400px]">
         <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
           <XAxis
@@ -194,11 +194,11 @@ const ComparisonChart = ({ selectedMetric }) => {
 // Componente: Scatter Plot (E-waste vs GDP)
 const ScatterAnalysis = () => {
   return (
-    <div className="bg-woodsmoke-900/40 backdrop-blur-sm border-2 border-white/10 p-6">
-      <h3 className="font-unbounded text-lg text-white mb-4">
+    <div className="bg-woodsmoke-900/40 backdrop-blur-sm border-2 border-white/10 p-4 sm:p-6">
+      <h3 className="font-unbounded text-sm sm:text-lg text-white mb-3 sm:mb-4">
         Relación E-Waste vs GDP per cápita
       </h3>
-      <ResponsiveContainer width="100%" height={400}>
+      <ResponsiveContainer width="100%" height={300} className="sm:h-[400px]">
         <ScatterChart margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
           <XAxis
@@ -229,8 +229,8 @@ const ScatterAnalysis = () => {
           </Scatter>
         </ScatterChart>
       </ResponsiveContainer>
-      <p className="font-sans text-sm text-white/60 mt-4">
-        Se observa una correlación positiva entre GDP y generación de e-waste, 
+      <p className="font-sans text-xs sm:text-sm text-white/60 mt-3 sm:mt-4">
+        Se observa una correlación positiva entre GDP y generación de e-waste,
         con los países avanzados (azul) mostrando mayor consumo y residuos per cápita.
       </p>
     </div>
@@ -273,19 +273,19 @@ const InsightsSection = () => {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
       {insights.map((insight, index) => (
         <div
           key={index}
-          className="bg-woodsmoke-900/60 backdrop-blur-sm border-2 border-white/10 p-6"
+          className="bg-woodsmoke-900/60 backdrop-blur-sm border-2 border-white/10 p-4 sm:p-6"
         >
-          <div className="flex items-start gap-3">
-            <span className="text-3xl">{insight.icon}</span>
+          <div className="flex items-start gap-2 sm:gap-3">
+            <span className="text-xl sm:text-3xl">{insight.icon}</span>
             <div>
-              <h4 className="font-unbounded text-base text-white mb-2">
+              <h4 className="font-unbounded text-xs sm:text-base text-white mb-1 sm:mb-2">
                 {insight.title}
               </h4>
-              <p className="font-sans text-sm text-white/70 leading-relaxed">
+              <p className="font-sans text-xs sm:text-sm text-white/70 leading-relaxed">
                 {insight.content}
               </p>
             </div>
@@ -309,21 +309,21 @@ export default function AnalysisComparison() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 sm:space-y-8">
       {/* Header */}
-      <div className="bg-woodsmoke-900/80 backdrop-blur-sm border-2 border-flamingo-400/20 p-8">
-        <h1 className="font-unbounded text-3xl text-white mb-3">
+      <div className="bg-woodsmoke-900/80 backdrop-blur-sm border-2 border-flamingo-400/20 p-4 sm:p-8">
+        <h1 className="font-unbounded text-lg sm:text-3xl text-white mb-2 sm:mb-3">
           Análisis de Clustering: E-Waste en LATAM
         </h1>
-        <p className="font-sans text-base text-white/70 max-w-3xl">
-          Clasificación de 13 países LATAM según patrones de desarrollo socioeconómico, 
-          consumo de equipos eléctricos y electrónicos (EEE), generación de residuos 
+        <p className="font-sans text-xs sm:text-base text-white/70 max-w-3xl">
+          Clasificación de 13 países LATAM según patrones de desarrollo socioeconómico,
+          consumo de equipos eléctricos y electrónicos (EEE), generación de residuos
           electrónicos (e-waste) y gestión ambiental (2009-2019).
         </p>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="flex gap-2 border-b-2 border-white/10">
+      {/* Navigation Tabs - Desktop */}
+      <div className="hidden sm:flex gap-2 border-b-2 border-white/10">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -339,10 +339,25 @@ export default function AnalysisComparison() {
         ))}
       </div>
 
+      {/* Navigation Dropdown - Mobile */}
+      <div className="sm:hidden">
+        <select
+          value={activeTab}
+          onChange={(e) => setActiveTab(e.target.value)}
+          className="w-full bg-woodsmoke-900/60 text-white border-2 border-white/10 p-3 font-unbounded text-sm focus:border-flamingo-400 focus:outline-none"
+        >
+          {tabs.map((tab) => (
+            <option key={tab.id} value={tab.id} className="bg-woodsmoke-950">
+              {tab.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
       {/* Content */}
       <div>
         {activeTab === 'clusters' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-6">
             {clusterInfo.map((cluster, index) => (
               <ClusterCard key={cluster.id} cluster={cluster} index={index} />
             ))}
@@ -350,12 +365,12 @@ export default function AnalysisComparison() {
         )}
 
         {activeTab === 'comparison' && (
-          <div className="space-y-6">
+          <div className="space-y-3 sm:space-y-6">
             <div className="bg-woodsmoke-900/60 backdrop-blur-sm border-2 border-white/10 p-4">
-              <label className="font-unbounded text-sm text-white/80 mb-3 block">
+              <label className="font-unbounded text-xs sm:text-sm text-white/80 mb-2 sm:mb-3 block">
                 Selecciona métrica:
               </label>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {[
                   { id: 'ewaste', label: 'E-Waste' },
                   { id: 'eee', label: 'EEE' },
@@ -366,7 +381,7 @@ export default function AnalysisComparison() {
                   <button
                     key={metric.id}
                     onClick={() => setSelectedMetric(metric.id)}
-                    className={`px-4 py-2 font-sans text-sm transition-colors ${
+                    className={`px-3 py-1.5 sm:px-4 sm:py-2 font-sans text-xs sm:text-sm transition-colors ${
                       selectedMetric === metric.id
                         ? 'bg-flamingo-400 text-woodsmoke-950'
                         : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
@@ -387,28 +402,28 @@ export default function AnalysisComparison() {
       </div>
 
       {/* Metodología */}
-      <div className="bg-woodsmoke-900/40 backdrop-blur-sm border-2 border-white/10 p-6">
-        <h3 className="font-unbounded text-lg text-white mb-4">
+      <div className="bg-woodsmoke-900/40 backdrop-blur-sm border-2 border-white/10 p-4 sm:p-6">
+        <h3 className="font-unbounded text-sm sm:text-lg text-white mb-3 sm:mb-4">
           Metodología de Clustering
         </h3>
-        <div className="space-y-3 font-sans text-sm text-white/70">
+        <div className="space-y-2 sm:space-y-3 font-sans text-xs sm:text-sm text-white/70">
           <p>
-            <strong className="text-white">Algoritmo:</strong> K-Means con k=4 clusters, 
+            <strong className="text-white">Algoritmo:</strong> K-Means con k=4 clusters,
             validado mediante el método del codo (inercia se aplana en k=3-4).
           </p>
           <p>
-            <strong className="text-white">Variables:</strong> ~27 características numéricas 
-            incluyendo indicadores económicos (GDP), demográficos (tamaño hogares), volumétricos 
-            (e-waste/EEE per cápita), categorías de residuos (temperature equipment, screens, etc.) 
+            <strong className="text-white">Variables:</strong> ~27 características numéricas
+            incluyendo indicadores económicos (GDP), demográficos (tamaño hogares), volumétricos
+            (e-waste/EEE per cápita), categorías de residuos (temperature equipment, screens, etc.)
             y agregados temporales (media, std, crecimiento 2009-2019).
           </p>
           <p>
-            <strong className="text-white">PCA:</strong> Reducción a 3 componentes capturando 
-            ~65.5% de varianza. PC1 (38.9%) mide madurez de mercado, PC2 (15.0%) dinámicas de 
+            <strong className="text-white">PCA:</strong> Reducción a 3 componentes capturando
+            ~65.5% de varianza. PC1 (38.9%) mide madurez de mercado, PC2 (15.0%) dinámicas de
             transición, PC3 (11.6%) riesgos ambientales específicos.
           </p>
           <p>
-            <strong className="text-white">Fuente de datos:</strong> Dataset unificado de 
+            <strong className="text-white">Fuente de datos:</strong> Dataset unificado de
             múltiples hojas Excel con estadísticas por país y año (2009-2019).
           </p>
         </div>

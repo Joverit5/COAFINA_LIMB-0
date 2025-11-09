@@ -138,24 +138,6 @@ Desarrollar una plataforma abierta que permita **monitorear, comparar y analizar
 - **Reproducibilidad:** alineada con principios FAIR y Open Data Charter.
 
 
-
-## ⚙️ Instalación
-
-```bash
-git clone https://github.com/Joverit5/COAFINA_LIMB-0.git
-cd COAFINA_LIMB-0
-pip install -r requirements.txt
-npm install
-npm run dev
-```
-## 🚀 Despliegue (Vercel)
-
-1. Conecta el repositorio en [vercel.com](https://vercel.com).
-2. Selecciona la rama `main`.
-3. Haz clic en **Deploy** (¡1 clic y listo!).
-
-
-
 ## 🤝 Contribuir
 
 ¡Tu ayuda impulsa el proyecto!

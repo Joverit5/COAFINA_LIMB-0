@@ -15,12 +15,12 @@ export function SelectionInfo() {
       {/* Botón Back */}
       <button
         onClick={goToHome}
-        className="group relative inline-flex items-center font-unbounded font-medium text-sm"
+        className="group relative inline-flex items-center font-unbounded font-medium text-xs md:text-sm"
       >
         {/* Ícono que sobresale (ahora a la izquierda) */}
         <span
           className={cn(
-            "relative z-10 px-4 py-3 -mr-2",
+            "relative z-10 px-2 py-2 md:px-3 md:py-3 -mr-2",
             "bg-flamingo-400",
             "border-2 border-woodsmoke-950 border-r-0",
             "shadow-[4px_4px_0px_0px_rgba(20,20,20,1)]",
@@ -32,7 +32,7 @@ export function SelectionInfo() {
           )}
         >
           <svg
-            className="w-5 h-5 text-black"
+            className="w-4 h-4 md:w-5 md:h-5 text-black"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -45,11 +45,11 @@ export function SelectionInfo() {
             />
           </svg>
         </span>
-        
+
         {/* Contenedor principal del botón */}
         <span
           className={cn(
-            "relative z-10 px-6 py-3",
+            "relative z-10 px-4 py-2 md:px-6 md:py-3",
             "bg-white text-woodsmoke-950",
             "border-0 border-woodsmoke-950",
             "shadow-[4px_4px_0px_0px_rgba(20,20,20,1)]",

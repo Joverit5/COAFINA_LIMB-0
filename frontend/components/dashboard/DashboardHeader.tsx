@@ -131,7 +131,7 @@ export function DashboardHeader() {
           onClick={goToSelection}
           className={cn(
             "flex items-center justify-center shrink-0 opacity-0",
-            "w-14 h-14 rounded-full",
+            "w-10 h-10 md:w-14 md:h-14 rounded-full",
             "bg-woodsmoke-950 text-mantis-400",
             "border-2 border-woodsmoke-900",
             "transition-all duration-200",
@@ -139,7 +139,7 @@ export function DashboardHeader() {
           )}
           aria-label="Volver a selección de países"
         >
-          <Globe className="w-6 h-6" />
+          <Globe className="w-5 h-5 md:w-6 md:h-6" />
         </button>
       </div>
     </div>
