@@ -11,11 +11,6 @@ echo "============================================="
 
 cd "$APP_PATH" || { echo "❌ No se encontró el directorio $APP_PATH"; exit 1; }
 
-pkill -f "uvicorn" >/dev/null
-
-nohup uvicorn "$APP_FILE" --host 0.0.0.0 --port $PORT > fastapi.log
-sleep 3
-
 
 if pgrep -f "uvicorn" > /dev/null; then
     echo "✅ FastAPI se está ejecutando correctamente en el puerto $PORT"
