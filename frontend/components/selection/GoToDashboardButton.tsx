@@ -22,7 +22,7 @@ export function GoToDashboardButton() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 20, scale: 0.9 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="absolute bottom-8 right-8 z-40"
+          className="fixed bottom-[3svh] right-[3svw] md:absolute md:bottom-8 md:right-8 z-40"
         >
           <button
             onClick={goToDashboard}
