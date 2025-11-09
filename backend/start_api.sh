@@ -3,7 +3,7 @@
 🚀 start_fastapi_tunnel.sh
 Levanta FastAPI y crea un túnel HTTPS con Cloudflare
 =============================================
-Ruta al backend (ajusta si tu main.py está en otro lugar)
+Ruta al backend ( ajusta si tu main.py está en otro lugar)
 APP_PATH="/home/$(whoami)/COAFINA_LIMB-0/backend"
 APP_FILE="main:app"
 PORT=8000
