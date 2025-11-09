@@ -30,20 +30,18 @@ from schemas import (
 )
 from utils import value_recoverable_usd_from_kt
 
-app = FastAPI(title="COAFINA E-Waste API", version="0.1")
-origins=[
-    "https://limb-0.vercel.app/",
-    "http://localhost:3000",
-]
-# Habilitar CORS para permitir peticiones desde el frontend durante desarrollo
-# Ajusta `allow_origins` a orígenes específicos en producción si lo deseas.
+
+
+app = FastAPI()
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 
 @app.get("/health")
