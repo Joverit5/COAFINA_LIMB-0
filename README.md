@@ -86,7 +86,7 @@ Desarrollar una plataforma abierta que permita **monitorear, comparar y analizar
 
 ### ⚙️ Funcionalidades
 
-- Dashboard interactivo: mapa + KPIs + Sankey + ranking top 10.
+- Dashboard interactivo: mapa + KPIs + gráficas dinámicas.
 - Filtros dinámicos (país / año).
 - Escenarios “¿qué pasa si?” en tasas de recolección.
 - Estimación de metales recuperables.
@@ -101,10 +101,9 @@ Desarrollar una plataforma abierta que permita **monitorear, comparar y analizar
 
 - **Frontend:** Next.js (React 18+), TypeScript 5+, Tailwind CSS.  
 - **Backend:** FastAPI (Python 3.11+).  
-- **Base de datos:** PostgreSQL (+ PostGIS opcional).  
 - **Infraestructura:** Despliegue automatizado en **Vercel**.  
-- **Procesamiento de datos:** pandas, NumPy, scikit-learn.  
-- **Visualización:** Plotly, Recharts, Leaflet.
+- **Procesamiento de datos:** pandas, scikit-learn.  
+- **Visualización:** Recharts
 
 
 
