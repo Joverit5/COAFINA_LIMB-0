@@ -87,6 +87,22 @@ export async function getEWasteStatsMultiple(codes: string[]): Promise<EWasteSta
 }
 
 /**
+ * Obtiene la serie temporal ampliada para un país (llama a /ewaste/time_series_full)
+ */
+export async function getTimeSeries(countryCode: string): Promise<any[]> {
+  const country = getCountryName(countryCode);
+  try {
+    const res = await fetch(`${API_BASE}/ewaste/time_series_full?country=${encodeURIComponent(country)}`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return Array.isArray(data) ? data : [];
+  } catch (e) {
+    console.error("getTimeSeries error", e);
+    return [];
+  }
+}
+
+/**
  * Formatea números grandes con separadores de miles
  */
 export function formatNumber(num: number): string {

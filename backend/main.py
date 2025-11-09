@@ -48,32 +48,38 @@ def health():
     return {"status": "ok"}
 
 @app.get("/ewaste/ton", response_model=List[Ton])
-def tonelada(country: Optional[int] = Query(None, description="México")):
+def tonelada(country: str = Query(...)):
     df = load_df_country_year()
     if df.empty:
         df = load_master_normalized()
+    sel = df[df['country'].str.lower() == country.lower()]
+    if sel.empty:
+        raise HTTPException(status_code=404, detail="No data for country")
     out = []
-    for _, r in df.iterrows():
+    for _, r in sel.sort_values(by='year').iterrows():
         out.append(
             {
                 'country': _clean_value(r.get('country')),
-                'year': int(r['year']) if pd.notna(r.get('year')) else None,
+                'year': int(r.get('year')) if pd.notna(r.get('year')) else None,
                 'e_waste_generated_kt': _safe_float(r.get('e_waste_generated_kt') or r.get('E_waste_generated_kt')),
             }
         )
     return out
 
 @app.get("/ewaste/percapita", response_model=List[Percapita])
-def percapita(country: Optional[int] = Query(None, description="México")):
+def percapita(country:str = Query(...)):
     df = load_df_country_year()
     if df.empty:
         df = load_master_normalized()
+    sel = df[df['country'].str.lower() == country.lower()]
+    if sel.empty:
+        raise HTTPException(status_code=404, detail="No data for country")
     out = []
-    for _, r in df.iterrows():
+    for _, r in sel.sort_values(by='year').iterrows():
         out.append(
             {
                 'country': _clean_value(r.get('country')),
-                'year': int(r['year']) if pd.notna(r.get('year')) else None,
+                'year': int(r.get('year')) if pd.notna(r.get('year')) else None,
                 'e_waste_generated_per_capita': _safe_float(r.get('ewaste_generated_kg_inh') or r.get('E_waste_generated_per_capita') or r.get('e_waste_generated_per_capita')),
                 'gdp_per_capita': _safe_float(r.get('gdp_per_capita') or r.get('GDP_per_capita')),
             }
@@ -81,48 +87,57 @@ def percapita(country: Optional[int] = Query(None, description="México")):
     return out
 
 @app.get("/ewaste/formal_recolect", response_model=List[Recolection])
-def formal_recolect(country: Optional[int] = Query(None, description="México")):
+def formal_recolect(country:str = Query(...)):
     df = load_df_country_year()
     if df.empty:
         df = load_master_normalized()
+    sel = df[df['country'].str.lower() == country.lower()]
+    if sel.empty:
+        raise HTTPException(status_code=404, detail="No data for country")
     out = []
-    for _, r in df.iterrows():
+    for _, r in sel.sort_values(by='year').iterrows():
         out.append(
             {
                 'country': _clean_value(r.get('country')),
-                'year': int(r['year']) if pd.notna(r.get('year')) else None,
+                'year': int(r.get('year')) if pd.notna(r.get('year')) else None,
                 'e_waste_formally_collected_kt': _safe_float(r.get('e_waste_formally_collected_kt') or r.get('E_waste_formally_collected_kt') or r.get('ewaste_formally_collected_kg_inh')),
             }
         )
     return out
 
 @app.get("/ewaste/placed_market", response_model=List[PlacedMarket])
-def placed_market(country: Optional[int] = Query(None, description="México")):
+def placed_market(country: str = Query(...)):
     df = load_df_country_year()
     if df.empty:
         df = load_master_normalized()
+    sel = df[df['country'].str.lower() == country.lower()]
+    if sel.empty:
+        raise HTTPException(status_code=404, detail="No data for country")
     out = []
-    for _, r in df.iterrows():
+    for _, r in sel.sort_values(by='year').iterrows():
         out.append(
             {
                 'country': _clean_value(r.get('country')),
-                'year': int(r['year']) if pd.notna(r.get('year')) else None,
+                'year': int(r.get('year')) if pd.notna(r.get('year')) else None,
                 'eee_placed_on_market_kg_inh': _safe_float(r.get('eee_placed_on_market_kg_inh') or r.get('EEE_placed_on_market_kg_inh')),
             }
         )
     return out
 
 @app.get("/ewaste/colection_rate", response_model=List[ColectionRate])
-def colection_rate(country: Optional[int] = Query(None, description="México")):
+def colection_rate(country: str = Query(...)):
     df = load_df_country_year()
     if df.empty:
         df = load_master_normalized()
+    sel = df[df['country'].str.lower() == country.lower()]
+    if sel.empty:
+        raise HTTPException(status_code=404, detail="No data for country")
     out = []
-    for _, r in df.iterrows():
+    for _, r in sel.sort_values(by='year').iterrows():
         out.append(
             {
                 'country': _clean_value(r.get('country')),
-                'year': int(r['year']) if pd.notna(r.get('year')) else None,
+                'year': int(r.get('year')) if pd.notna(r.get('year')) else None,
                 'e_waste_collection_rate': _safe_float(r.get('e_waste_collection_rate') or r.get('E_waste_collection_rate') or r.get('ewaste_management_collection_rate')),
             }
         )
@@ -217,13 +232,56 @@ def time_series(country: str = Query(...)):
     if sel.empty:
         raise HTTPException(status_code=404, detail="No data for country")
     rows = []
-    for _, r in sel.sort_values('year').iterrows():
+    if isinstance(sel, pd.Series):
+        sel = sel.to_frame().T
+    for _, r in sel.sort_values(by='year').iterrows():
         rows.append({
             'year': int(r['year']) if pd.notna(r.get('year')) else None,
             'ewaste_generated_kg_inh': _safe_float(r.get('ewaste_generated_kg_inh') or r.get('ewaste_generated_kg_inh')),
             'eee_placed_on_market_kg_inh': _safe_float(r.get('eee_placed_on_market_kg_inh') or r.get('eee_placed_on_market_kg_inh')),
         })
     return rows
+
+
+@app.get("/ewaste/time_series_full")
+def time_series_full(country: str = Query(...)):
+    """Devuelve una serie temporal ampliada por país con varias métricas si están disponibles.
+
+    Campos devueltos por fila (si existen en el dataset):
+    - year
+    - e_waste_generated_kt
+    - ewaste_generated_kg_inh
+    - eee_placed_on_market_kg_inh
+    - e_waste_collection_rate
+    - e_waste_formally_collected_kt
+    - value_recoverable_usd (calculado)
+    """
+    df = load_df_country_year()
+    if df.empty:
+        df = load_master_normalized()
+    sel = df[df['country'].str.lower() == country.lower()]
+    if sel.empty:
+        raise HTTPException(status_code=404, detail="No data for country")
+    out = []
+    if isinstance(sel, pd.Series):
+        sel = sel.to_frame().T
+    for _, r in sel.sort_values('year').iterrows():
+        ekt = _safe_float(r.get('e_waste_generated_kt') or r.get('E_waste_generated_kt'))
+        percap = _safe_float(r.get('ewaste_generated_kg_inh') or r.get('E_waste_generated_per_capita') or r.get('e_waste_generated_per_capita'))
+        market = _safe_float(r.get('eee_placed_on_market_kg_inh') or r.get('eee_placed_on_market_kg_inh'))
+        coll = _safe_float(r.get('e_waste_collection_rate') or r.get('E_waste_collection_rate') or r.get('ewaste_management_collection_rate'))
+        formally = _safe_float(r.get('e_waste_formally_collected_kt') or r.get('E_waste_formally_collected_kt') or r.get('ewaste_formally_collected_kg_inh'))
+        value = value_recoverable_usd_from_kt(ekt) if ekt is not None else None
+        out.append({
+            'year': int(r['year']) if pd.notna(r.get('year')) else None,
+            'e_waste_generated_kt': ekt,
+            'ewaste_generated_kg_inh': percap,
+            'eee_placed_on_market_kg_inh': market,
+            'e_waste_collection_rate': coll,
+            'e_waste_formally_collected_kt': formally,
+            'value_recoverable_usd': value,
+        })
+    return out
 
 
 @app.get("/ewaste/categories", response_model=CategoryBreakdown)
@@ -409,7 +467,7 @@ def data_table(country: Optional[str] = None, year: Optional[int] = None, limit:
     df_page = df.iloc[offset: offset + limit]
     # Convert DataFrame page to JSON-serializable records (replace NaN/pd.NA and numpy types)
     df_page_clean = df_page.where(pd.notnull(df_page), None)
-    records = df_page_clean.to_dict(orient='records')
+    records = df_page_clean.to_dict(orient='records')  # type: ignore
     # Convert numpy scalars to python primitives
     def _normalize_record(rec):
         out = {}

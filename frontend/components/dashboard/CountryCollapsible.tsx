@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import type { EWasteStats } from "@/types";
 import { CountryMetrics } from "./CountryMetrics";
 import { CountryDataTabs } from "./CountryDataTabs";
+import CountryCharts from "./CountryCharts";
 import { CountryDataTable } from "./CountryDataTable";
 import {
   Collapsible,
@@ -27,6 +28,7 @@ interface CountryCollapsibleProps {
  */
 export function CountryCollapsible({ data, countryCode, defaultOpen = false, index = 0 }: CountryCollapsibleProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
+  const [selectedTab, setSelectedTab] = useState<"tons" | "percapita" | "collected" | "recoverable" | "market" | "rate">("tons");
   const [showSketch, setShowSketch] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -111,7 +113,7 @@ export function CountryCollapsible({ data, countryCode, defaultOpen = false, ind
               "transition-transform duration-300 hover:scale-110"
             )}
           >
-            <span className="text-2xl">{getFlagEmoji(data.code)}</span>
+            <span className="text-2xl">{getFlagEmoji(countryCode)}</span>
           </div>
 
           {/* Nombre del país */}
@@ -193,7 +195,12 @@ export function CountryCollapsible({ data, countryCode, defaultOpen = false, ind
         )}
 
         {/* Tabs de datos */}
-        <CountryDataTabs />
+        <CountryDataTabs onTabChange={(t) => setSelectedTab(t)} defaultTab={selectedTab} />
+
+        {/* Gráfica según tab seleccionado */}
+        <div className="mb-6">
+          <CountryCharts countryCode={countryCode} tab={selectedTab} />
+        </div>
 
         {/* Tabla de datos */}
         <CountryDataTable data={data} />
