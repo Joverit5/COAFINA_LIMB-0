@@ -18,8 +18,7 @@ export function Navbar() {
           onClick={goToHome}
           className="group relative"
         >
-          <h1 className="font-unbounded font-medium text-3xl text-white tracking-tight
-                         transition-colors duration-300 group-hover:text-flamingo-400">
+          <h1 className="font-unbounded font-medium text-2xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-white tracking-tight transition-colors duration-300 group-hover:text-flamingo-400">
             LIMB-O
           </h1>
         </button>
@@ -42,7 +41,8 @@ export function Navbar() {
               "group-hover:shadow-[6px_6px_0px_0px_rgba(20,20,20,1)]",
               "group-hover:-translate-x-0.5 group-hover:-translate-y-0.5",
               "group-active:shadow-[2px_2px_0px_0px_rgba(20,20,20,1)]",
-              "group-active:translate-x-0.5 group-active:translate-y-0.5"
+              "group-active:translate-x-0.5 group-active:translate-y-0.5",
+              "h-11"
             )}
           >
             EMPEZAR
@@ -59,7 +59,8 @@ export function Navbar() {
               "group-hover:shadow-[6px_6px_0px_0px_rgba(20,20,20,1)] ",
               "group-hover:-translate-x-0.5 group-hover:-translate-y-0.5",
               "group-active:shadow-[2px_2px_0px_0px_rgba(20,20,20,1)]",
-              "group-active:translate-x-0.5 group-active:translate-y-0.5"
+              "group-active:translate-x-0.5 group-active:translate-y-0.5",
+              "h-11"
             )}
           >
             <svg

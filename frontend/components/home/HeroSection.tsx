@@ -80,8 +80,7 @@ export function HeroSection() {
       <div className="p-10">
         <h2
           ref={titleRef}
-          className="font-unbounded font-medium text-[6rem] md:text-[8rem] lg:text-[10rem]
-                     leading-none text-flamingo-400"
+          className="font-unbounded font-medium text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] leading-none text-flamingo-400"
         >
           LIMB-0
         </h2>
