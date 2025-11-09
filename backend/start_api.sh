@@ -9,4 +9,6 @@ sleep 5
 
 # === Iniciar túnel de Cloudflare ===
 echo "Iniciando túnel de Cloudflare..."
-cloudflared tunnel --url http://localhost:8000
+nohup cloudflared tunnel --url http://localhost:8000 > cloudflared.log 2>&1 &
+
+echo "✅ Servidor FastAPI y túnel de Cloudflare iniciados correctamente."
