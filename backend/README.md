@@ -24,12 +24,10 @@ Supuestos metodológicos importantes
 
 - `value_recoverable_usd`: se calcula con una suposición simple: fracción recuperable de metales y precio medio por tonelada recuperada. Estos parámetros son configurables en `utils.py`. Se documenta y puede ajustarse.
 
-Qué incluye este directorio
-
-- `main.py`: app FastAPI con endpoints principales.
-- `data_loader.py`: carga y normaliza CSVs.
-- `schemas.py`: modelos Pydantic para respuestas.
-- `utils.py`: utilidades (cálculos, normalizaciones).
+ - Ejecuta: uvicorn main:app --reload --port 8000
+ - Para generar versiones JSON de los CSV (opcional pero recomendado):
+	 - python scripts/convert_data_to_json.py
+	 Esto creará en `Code/limbo/data/` los archivos `df_country_year.json`, `df_category_long.json`, `df_category_pairs.json`, `master_dataset_normalized.json` y `master_final_dataset.json`.
 
 Próximos pasos sugeridos
 
