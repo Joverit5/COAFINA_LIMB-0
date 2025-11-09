@@ -20,12 +20,9 @@ export function CountryDataTabs({ onTabChange, defaultTab = "tons" }: CountryDat
     { value: "tons", label: "Toneladas" },
     { value: "percapita", label: "Per Cápita" },
     { value: "collected", label: "Recolección Formal" },
+    {value: "rate", label: "Tasa de Recolección" },
     { value: "recoverable", label: "Recuperable" },
-    { value: "recycled", label: "Reciclado" },
-    { value: "composted", label: "Compostado" },
-    { value: "incinerated", label: "Incinerado" },
-    { value: "landfill", label: "Vertedero" },
-    { value: "openDump", label: "Vertedero Abierto" },
+    { value: "market", label: "Puesto en mercado" },
   ];
 
   const handleTabClick = (tab: CountryDataTab) => {

@@ -18,8 +18,13 @@ from schemas import (
     ChoroplethEntry,
     KPIStats,
     TimeSeriesPoint,
+    Percapita,
+    Ton,
     CategoryBreakdown,
     SankeyNodes,
+    ColectionRate,
+    Recolection,
+    PlacedMarket,
     ScatterPoint,
     ScenarioResult,
 )
@@ -42,6 +47,86 @@ app.add_middleware(
 def health():
     return {"status": "ok"}
 
+@app.get("/ewaste/ton", response_model=List[Ton])
+def tonelada(country: Optional[int] = Query(None, description="México")):
+    df = load_df_country_year()
+    if df.empty:
+        df = load_master_normalized()
+    out = []
+    for _, r in df.iterrows():
+        out.append(
+            {
+                'country': _clean_value(r.get('country')),
+                'year': int(r['year']) if pd.notna(r.get('year')) else None,
+                'e_waste_generated_kt': _safe_float(r.get('e_waste_generated_kt') or r.get('E_waste_generated_kt')),
+            }
+        )
+    return out
+
+@app.get("/ewaste/percapita", response_model=List[Percapita])
+def percapita(country: Optional[int] = Query(None, description="México")):
+    df = load_df_country_year()
+    if df.empty:
+        df = load_master_normalized()
+    out = []
+    for _, r in df.iterrows():
+        out.append(
+            {
+                'country': _clean_value(r.get('country')),
+                'year': int(r['year']) if pd.notna(r.get('year')) else None,
+                'e_waste_generated_per_capita': _safe_float(r.get('ewaste_generated_kg_inh') or r.get('E_waste_generated_per_capita') or r.get('e_waste_generated_per_capita')),
+                'gdp_per_capita': _safe_float(r.get('gdp_per_capita') or r.get('GDP_per_capita')),
+            }
+        )
+    return out
+
+@app.get("/ewaste/formal_recolect", response_model=List[Recolection])
+def formal_recolect(country: Optional[int] = Query(None, description="México")):
+    df = load_df_country_year()
+    if df.empty:
+        df = load_master_normalized()
+    out = []
+    for _, r in df.iterrows():
+        out.append(
+            {
+                'country': _clean_value(r.get('country')),
+                'year': int(r['year']) if pd.notna(r.get('year')) else None,
+                'e_waste_formally_collected_kt': _safe_float(r.get('e_waste_formally_collected_kt') or r.get('E_waste_formally_collected_kt') or r.get('ewaste_formally_collected_kg_inh')),
+            }
+        )
+    return out
+
+@app.get("/ewaste/placed_market", response_model=List[PlacedMarket])
+def placed_market(country: Optional[int] = Query(None, description="México")):
+    df = load_df_country_year()
+    if df.empty:
+        df = load_master_normalized()
+    out = []
+    for _, r in df.iterrows():
+        out.append(
+            {
+                'country': _clean_value(r.get('country')),
+                'year': int(r['year']) if pd.notna(r.get('year')) else None,
+                'eee_placed_on_market_kg_inh': _safe_float(r.get('eee_placed_on_market_kg_inh') or r.get('EEE_placed_on_market_kg_inh')),
+            }
+        )
+    return out
+
+@app.get("/ewaste/colection_rate", response_model=List[ColectionRate])
+def colection_rate(country: Optional[int] = Query(None, description="México")):
+    df = load_df_country_year()
+    if df.empty:
+        df = load_master_normalized()
+    out = []
+    for _, r in df.iterrows():
+        out.append(
+            {
+                'country': _clean_value(r.get('country')),
+                'year': int(r['year']) if pd.notna(r.get('year')) else None,
+                'e_waste_collection_rate': _safe_float(r.get('e_waste_collection_rate') or r.get('E_waste_collection_rate') or r.get('ewaste_management_collection_rate')),
+            }
+        )
+    return out
 
 @app.get("/ewaste/choropleth", response_model=List[ChoroplethEntry])
 def choropleth(year: Optional[int] = Query(None, description="Año (ej: 2018)")):

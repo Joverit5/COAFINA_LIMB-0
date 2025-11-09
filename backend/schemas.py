@@ -1,6 +1,25 @@
 from typing import List, Optional
 from pydantic import BaseModel
 
+class ColectionRate(BaseModel):
+    country: str
+    year: int
+    e_waste_collection_rate: Optional[float]
+    
+class Ton(BaseModel):
+
+    country: str
+    year: int
+    e_waste_generated_kt: Optional[float]
+class Recolection(BaseModel):
+    country: str
+    year: int
+    e_waste_formally_collected_kt: Optional[float]
+class Percapita(BaseModel):
+    country: str
+    year: int
+    e_waste_generated_per_capita: Optional[float]
+    gdp_per_capita: Optional[float]
 
 class ChoroplethEntry(BaseModel):
     country: str
@@ -11,6 +30,10 @@ class ChoroplethEntry(BaseModel):
     e_waste_generated_kt: Optional[float]
     e_waste_collection_rate: Optional[float]
 
+class PlacedMarket(BaseModel):
+    country: str
+    year: int
+    eee_placed_on_market_kg_inh: Optional[float]
 
 class KPIStats(BaseModel):
     country: str

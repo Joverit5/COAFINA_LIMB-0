@@ -12,6 +12,15 @@ const API_BASE = "https://9q6wqtvz-8000.use.devtunnels.ms";
  */
 const ISO_TO_COUNTRY_NAME: Record<string, string> = {
   COL: "Colombia",
+  BOL: "Bolivia",
+  CHL: "Chile",
+  ECU: "Ecuador",
+  GTM: "Guatemala",
+  HND: "Honduras",
+  NIC: "Nicaragua",
+  PAN: "Panamá",
+  PER: "Perú",
+  URY: "Uruguay",
   BRA: "Brasil",
   VEN: "Venezuela",
   ARG: "Argentina",
