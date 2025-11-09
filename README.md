@@ -86,7 +86,7 @@ Desarrollar una plataforma abierta que permita **monitorear, comparar y analizar
 
 ### ⚙️ Funcionalidades
 
-- Dashboard interactivo: mapa + KPIs + Sankey + ranking top 10.
+- Dashboard interactivo: mapa + KPIs + gráficas dinámicas.
 - Filtros dinámicos (país / año).
 - Escenarios “¿qué pasa si?” en tasas de recolección.
 - Estimación de metales recuperables.
