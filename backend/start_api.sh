@@ -39,5 +39,3 @@ echo "============================================="
 
 Ejecutar túnel Cloudflare
 cloudflared tunnel --url "http://localhost:$PORT"
-Actualiza el sh
-tenkiu
