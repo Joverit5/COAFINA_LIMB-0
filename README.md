@@ -23,9 +23,7 @@
   </a>
   <h3 align="center">Limb-0 — Visualización y análisis del flujo de e-waste en América Latina y el Caribe</h3>
   <p align="center">
-    <a href="Documentación SRS Limb-0.pdf"><strong>Ver SRS 📰</strong></a>
-    <br />
-    <a href="https://limb-0-ewaste.vercel.app/"><strong>App web en Vercel 🌎</strong></a>
+    <a href="https://limb-0.vercel.app/"><strong>App web en Vercel 🌎</strong></a>
     <br />
   </p>
 </div>
@@ -56,7 +54,7 @@
 ## Sobre el proyecto
 
 <div align="center">
-  <img src="dashboard-preview.png" alt="Preview" width="1000">
+  <img src="preview.png" alt="Preview" width="1000">
 </div>
 
 **Limb-0** es una plataforma web *open-source* que visualiza y analiza los flujos de residuos electrónicos (e-waste) en **América Latina y el Caribe (ALC)**.  
@@ -171,8 +169,8 @@ npm run dev
 
 ## Top contributors:
 
-<a href="https://github.com/Joverit5/NASA-SPATIUM/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Joverit5/NASA-SPATIUM" alt="contrib.rocks image" />
+<a href="https://github.com/Joverit5/COAFINA_LIMB-0/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Joverit5/COAFINA_LIMB-0" alt="contrib.rocks image" />
 </a>
 
 <!-- LICENSE -->
