@@ -115,7 +115,7 @@ export interface EWasteScenario {
 export type ViewMode = "home" | "selection" | "dashboard";
 
 // Tabs del dashboard
-export type DashboardTab = "individual" | "comparison";
+export type DashboardTab = "individual" | "comparison" | "analysis";
 
 // Tabs de datos de país
 export type CountryDataTab =

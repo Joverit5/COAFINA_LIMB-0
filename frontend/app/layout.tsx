@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Unbounded } from "next/font/google";
 import "./globals.css";
+import { CRTFilter } from "@/components/effects/CRTFilter";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${unbounded.variable} antialiased`}
       >
         {children}
+        <CRTFilter enabled={true} intensity="medium" />
+
       </body>
     </html>
   );
