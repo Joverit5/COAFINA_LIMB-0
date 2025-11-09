@@ -17,7 +17,6 @@ from data_loader import (
 from schemas import (
     ChoroplethEntry,
     KPIStats,
-    KPIStatsBulk,
     TimeSeriesPoint,
     Percapita,
     Ton,
