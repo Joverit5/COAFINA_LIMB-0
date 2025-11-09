@@ -11,6 +11,7 @@ echo "============================================="
 
 cd "$APP_PATH" || { echo "❌ No se encontró el directorio $APP_PATH"; exit 1; }
 
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
 if pgrep -f "uvicorn" > /dev/null; then
     echo "✅ FastAPI se está ejecutando correctamente en el puerto $PORT"
