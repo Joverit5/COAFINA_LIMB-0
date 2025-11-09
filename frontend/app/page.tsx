@@ -22,6 +22,7 @@ function AppContent() {
           isInteractive={isGlobeInteractive}
           selectedCountries={selectedCountries}
           onCountryClick={toggleCountrySelection}
+          isHome={viewMode === "home"}
         />
       </div>
 

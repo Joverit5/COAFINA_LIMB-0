@@ -21,8 +21,7 @@ export function FloatingNav() {
       <div
         className={cn(
           "inline-flex items-center gap-1 p-1.5",
-          "bg-woodsmoke-900/90 backdrop-blur-md",
-          "border-2 border-woodsmoke-700",
+          " backdrop-blur-md",
           "rounded-md",
           "shadow-lg"
         )}

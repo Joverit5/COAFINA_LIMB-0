@@ -6,6 +6,7 @@ import { getCountryName } from "@/lib/mock-data";
 import { Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 import gsap from "gsap";
+import lookup from 'country-code-lookup';
 
 /**
  * Header del Dashboard
@@ -69,29 +70,9 @@ export function DashboardHeader() {
   }, [selectedCountries]);
 
   // Obtener emoji de bandera
-  const getFlagEmoji = (countryCode: string): string => {
-    const iso3ToIso2: Record<string, string> = {
-      COL: "CO",
-      BRA: "BR",
-      VEN: "VE",
-      ARG: "AR",
-      MEX: "MX",
-      CHL: "CL",
-      PER: "PE",
-      ECU: "EC",
-      BOL: "BO",
-      PRY: "PY",
-      URY: "UY",
-    };
-
-    const iso2 = iso3ToIso2[countryCode];
-    if (!iso2) return "🌎";
-
-    const codePoints = iso2
-      .toUpperCase()
-      .split("")
-      .map((char) => 127397 + char.charCodeAt(0));
-    return String.fromCodePoint(...codePoints);
+  const getFlagUrl = (countryCode: string): string => {
+    const country = lookup.byIso(countryCode);
+    return country ? `https://flagcdn.com/w40/${country.iso2.toLowerCase()}.png` : '';
   };
 
   return (
@@ -125,7 +106,11 @@ export function DashboardHeader() {
                   )}
                   style={{ zIndex: selectedCountries.length - index }}
                 >
-                  <span className="text-2xl">{getFlagEmoji(countryCode)}</span>
+                  <img 
+                    src={getFlagUrl(countryCode)}
+                    alt={`Bandera de ${getCountryName(countryCode)}`}
+                    className="w-8 h-8 object-cover rounded-full"
+                  />
                 </div>
               ))}
             </div>
@@ -145,7 +130,7 @@ export function DashboardHeader() {
           ref={buttonRef}
           onClick={goToSelection}
           className={cn(
-            "flex items-center justify-center flex-shrink-0 opacity-0",
+            "flex items-center justify-center shrink-0 opacity-0",
             "w-14 h-14 rounded-full",
             "bg-woodsmoke-950 text-mantis-400",
             "border-2 border-woodsmoke-900",

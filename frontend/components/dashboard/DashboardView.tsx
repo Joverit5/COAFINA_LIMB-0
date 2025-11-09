@@ -65,7 +65,7 @@ export function DashboardView() {
               {countriesData.length === 0 && (
                 <div className="text-center py-16">
                   <p className="font-sans text-woodsmoke-400">
-                    No hay países seleccionados
+                    No hay datos del país seleccionado.
                   </p>
                 </div>
               )}

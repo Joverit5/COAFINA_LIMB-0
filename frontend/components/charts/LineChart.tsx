@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 interface Point {
   x: number | string; // year
@@ -65,7 +66,7 @@ export function LineChart({ data, color = "#fb7185", strokeWidth = 2, height = 1
   }, [points]);
 
   return (
-    <div className="w-full" style={{ maxWidth: width }}>
+    <div className="w-full relative" style={{ maxWidth: width }}>
       <svg width="100%" viewBox={`0 0 ${width} ${height}`} className="border border-woodsmoke-900 rounded-md bg-woodsmoke-950">
         {/* grid lines */}
         <g stroke="#2b2b2b" strokeWidth={0.5}>
@@ -80,29 +81,75 @@ export function LineChart({ data, color = "#fb7185", strokeWidth = 2, height = 1
         {/* points */}
         {points.pts.map((p, i) => (
           !isNaN(p.y) ? (
-            <circle key={i} cx={p.x} cy={p.y} r={3} fill={color} onMouseEnter={() => setHover({x:p.x,y:p.y,index:i})} onMouseLeave={() => setHover(null)} />
+            <circle 
+              key={i} 
+              cx={p.x} 
+              cy={p.y} 
+              r={hover?.index === i ? 5 : 3} 
+              fill={color} 
+              className="transition-all duration-200"
+              onMouseEnter={() => setHover({x:p.x,y:p.y,index:i})} 
+              onMouseLeave={() => setHover(null)} 
+            />
           ) : null
         ))}
-
-        {/* hover tooltip */}
-        {hover && (() => {
-          const idx = hover.index;
-          const d = data[idx];
-          const tooltipX = Math.min(Math.max(hover.x + 6, padding), width - padding - 140);
-          const tooltipY = Math.max(hover.y - 36, padding);
-          return (
-            <g>
-              <rect x={tooltipX} y={tooltipY} width={140} height={48} rx={6} fill="#0f1724" stroke="#111827" />
-              <text x={tooltipX + 8} y={tooltipY + 18} fill="#fff" fontSize={12} fontFamily="Inter, Arial">
-                {`Año: ${d.x}`}
-              </text>
-              <text x={tooltipX + 8} y={tooltipY + 36} fill="#fff" fontSize={12} fontFamily="Inter, Arial">
-                {`${country ?? ""} — ${yLabel ?? "value"}: ${d.y == null ? "N/A" : Number(d.y).toLocaleString('es-ES')}`}
-              </text>
-            </g>
-          );
-        })()}
       </svg>
+
+      {/* Custom Tooltip */}
+      {hover && (
+        <div 
+          style={{
+            position: 'absolute',
+            left: `${hover.x}px`,
+            top: `${hover.y}px`,
+            transform: `translate(-50%, ${hover.index === 0 ? 20 : -100}%)`,
+            marginTop: hover.index === 0 ? '10px' : '-10px',
+          }}
+          className="pointer-events-none z-50"
+        >
+          <div className="rounded-none border-2 border-white/10 overflow-hidden bg-woodsmoke-950/40 backdrop-blur-sm shadow-2xl min-w-48">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-transparent hover:bg-transparent border-b-2 border-white/10">
+                  <TableHead className="font-unbounded text-xs text-white uppercase tracking-wider px-4 py-2">
+                    {country || "País"}
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                  <TableCell className="font-sans text-sm text-white/80 px-4 py-2">
+                    Año
+                  </TableCell>
+                  <TableCell className="font-mono text-sm text-flamingo-400 font-medium text-right px-4 py-2">
+                    {data[hover.index].x}
+                  </TableCell>
+                </TableRow>
+                <TableRow className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                  <TableCell className="font-sans text-sm text-white/80 px-4 py-2">
+                    {yLabel || "Valor"}
+                  </TableCell>
+                  <TableCell className="font-mono text-sm text-flamingo-400 font-medium text-right px-4 py-2">
+                    {data[hover.index].y === null 
+                      ? "N/A" 
+                      : Number(data[hover.index].y).toLocaleString('es-ES', {
+                          maximumFractionDigits: 2,
+                          minimumFractionDigits: 0
+                        })
+                    }
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+            
+            <div className="px-4 py-2 border-t border-white/5 bg-woodsmoke-950/60">
+              <p className="text-xs text-white/40 font-mono">
+                Fuente: API /ewaste/time_series_full
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

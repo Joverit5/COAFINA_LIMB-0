@@ -26,24 +26,105 @@ export const Globe3D = memo(function Globe3D({
   selectedCountries,
   onCountryClick,
   className,
+  isHome = false,
 }: Globe3DProps) {
   const globeRef = useRef<any>(null);
   const [geoData, setGeoData] = useState<GeoJSONData>({ type: "FeatureCollection", features: [] });
   const [isLoading, setIsLoading] = useState(true);
+  const [renderFeatures, setRenderFeatures] = useState<any[]>([]);
+  const [randomHighlights, setRandomHighlights] = useState<string[]>([]);
 
   // Cargar datos GeoJSON (solo una vez)
   useEffect(() => {
-    fetch("/countries.geojson")
-      .then((res) => res.json())
-      .then((data: GeoJSONData) => {
-        setGeoData(data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error cargando GeoJSON:", error);
-        setIsLoading(false);
-      });
+    // Load geojson during idle time to avoid blocking main render
+    const load = () => {
+      fetch("/countries.geojson")
+        .then((res) => res.json())
+        .then((data: GeoJSONData) => {
+          setGeoData(data);
+        })
+        .catch((error) => {
+          console.error("Error cargando GeoJSON:", error);
+        })
+        .finally(() => setIsLoading(false));
+    };
+
+    if (typeof (window as any).requestIdleCallback === "function") {
+      (window as any).requestIdleCallback(load, { timeout: 200 });
+    } else {
+      // fallback
+      setTimeout(load, 50);
+    }
   }, []);
+
+  // Simplify / decimate coordinates if geojson is huge. This is a lightweight
+  // simplification that samples coordinates every N points to reduce vertex count
+  // while preserving overall shapes. Keeps quality for most use-cases but reduces
+  // rendering pressure dramatically for very detailed files.
+  useEffect(() => {
+    if (!geoData || !geoData.features || geoData.features.length === 0) {
+      setRenderFeatures([]);
+      return;
+    }
+
+    const countCoords = (feat: any) => {
+      let total = 0;
+      const geom = feat.geometry;
+      if (!geom) return 0;
+      const recurse = (coords: any) => {
+        if (typeof coords[0] === "number") {
+          total += 1;
+          return;
+        }
+        for (const c of coords) recurse(c);
+      };
+      recurse(geom.coordinates);
+      return total;
+    };
+
+    const totalCoords = geoData.features.reduce((s, f) => s + countCoords(f), 0);
+    const MAX_POINTS = 25000; // target to keep under for rendering
+    let step = 1;
+    if (totalCoords > MAX_POINTS) {
+      step = Math.ceil(totalCoords / MAX_POINTS);
+    }
+
+    const decimateCoords = (coords: any): any => {
+      if (typeof coords[0] === "number") {
+        // coords is [lng, lat]
+        return coords;
+      }
+      // coords is an array of coordinates or arrays
+      // if it's an array of number-arrays (a ring), sample every `step`
+      if (Array.isArray(coords) && coords.length > 0 && typeof coords[0][0] === "number") {
+        const out: any[] = [];
+        for (let i = 0; i < coords.length; i += step) {
+          out.push(coords[i]);
+        }
+        // ensure closed ring
+        if (out.length > 0) {
+          const first = out[0];
+          const last = out[out.length - 1];
+          if (first[0] !== last[0] || first[1] !== last[1]) out.push(first);
+        }
+        return out;
+      }
+      return coords.map((c: any) => decimateCoords(c));
+    };
+
+    const simplified = geoData.features.map((f: any) => {
+      if (step <= 1) return f;
+      try {
+        const nf = { ...f, geometry: { ...f.geometry } };
+        nf.geometry.coordinates = decimateCoords(f.geometry.coordinates);
+        return nf;
+      } catch (e) {
+        return f;
+      }
+    });
+
+    setRenderFeatures(simplified);
+  }, [geoData]);
 
   // Manejar clic en país (memoizado)
   const handlePolygonClick = useCallback((polygon: any) => {
@@ -65,22 +146,50 @@ export const Globe3D = memo(function Globe3D({
   const getPolygonSideColor = useCallback((polygon: any) => {
     const countryCode = polygon.properties.ISO_A3;
     const isSelected = selectedCountries.includes(countryCode);
+    const isRandomlyHighlighted = randomHighlights.includes(countryCode);
 
-    return isSelected ? "rgba(242, 88, 54, 0.9)" : "rgba(100, 100, 100, 0.1)";
-  }, [selectedCountries]);
+    if (isSelected) return "rgba(242, 88, 54, 0.9)";
+    if (isHome && !isInteractive && isRandomlyHighlighted) return "rgba(242, 88, 54, 0.6)";
+    return "rgba(100, 100, 100, 0.1)";
+  }, [selectedCountries, randomHighlights, isInteractive, isHome]);
 
   // Altura del polígono (memoizado)
   const getPolygonAltitude = useCallback(() => {
     return 0.001;
   }, []);
 
-  // Color del borde del polígono (memoizado)
+  // Efecto para la animación aleatoria solo en la página de inicio
+  useEffect(() => {
+    if (!isInteractive && isHome) {
+      const interval = setInterval(() => {
+        const availableCountries = renderFeatures.map((f: any) => f.properties.ISO_A3);
+        const randomCountries = [];
+        const numHighlights = Math.floor(Math.random() * 5) + 1; // 1-5 países
+        
+        for (let i = 0; i < numHighlights; i++) {
+          const randomIndex = Math.floor(Math.random() * availableCountries.length);
+          randomCountries.push(availableCountries[randomIndex]);
+        }
+        
+        setRandomHighlights(randomCountries);
+      }, 2000); // Cambiar cada 2 segundos
+
+      return () => clearInterval(interval);
+    } else {
+      setRandomHighlights([]);
+    }
+  }, [isInteractive, isHome, renderFeatures]);
+
+  // Color del contorno del polígono (memoizado)
   const getPolygonStrokeColor = useCallback((polygon: any) => {
     const countryCode = polygon.properties.ISO_A3;
     const isSelected = selectedCountries.includes(countryCode);
+    const isRandomlyHighlighted = randomHighlights.includes(countryCode);
 
-    return isSelected ? "#f25836" : "rgba(255, 255, 255, 0.1)";
-  }, [selectedCountries]);
+    if (isSelected) return "#f25836";
+    if (isHome && !isInteractive && isRandomlyHighlighted) return "#f25836";
+    return "rgba(255, 255, 255, 0.1)";
+  }, [selectedCountries, randomHighlights, isInteractive, isHome]);
 
   if (isLoading) {
     return (
@@ -99,29 +208,31 @@ export const Globe3D = memo(function Globe3D({
         backgroundImageUrl=""
         backgroundColor="#141414"
 
-        // Configuración de polígonos (países)
-        polygonsData={geoData.features}
-        polygonCapColor={getPolygonCapColor}
-        polygonSideColor={getPolygonSideColor}
-        polygonStrokeColor={getPolygonStrokeColor}
-        polygonAltitude={getPolygonAltitude}
-        polygonLabel={() => ""}
+  // Configuración de polígonos (países)
+  polygonsData={renderFeatures.length ? renderFeatures : geoData.features}
+  polygonCapColor={getPolygonCapColor}
+  polygonSideColor={getPolygonSideColor}
+  polygonStrokeColor={getPolygonStrokeColor}
+  polygonAltitude={getPolygonAltitude}
+  polygonLabel={() => ""}
 
-        // Interacción
-        onPolygonClick={handlePolygonClick}
-        onPolygonHover={() => {}}
-        polygonsTransitionDuration={300}
+  // Interacción
+  onPolygonClick={handlePolygonClick}
+  onPolygonHover={() => {}}
+  // evitar transiciones pesadas cuando hay muchos polígonos
+  polygonsTransitionDuration={0}
 
-        // Atmósfera
-        showAtmosphere={true}
-        atmosphereColor="#d9d9d9"
-        atmosphereAltitude={0.15}
+  // Atmósfera
+  showAtmosphere={true}
+  atmosphereColor="#d9d9d9"
+  atmosphereAltitude={0.15}
 
-        // Configuración de renderizado optimizada
+        // Configuración de renderizado optimizada (más orientada a rendimiento)
         rendererConfig={{
-          antialias: true,
+          antialias: false,
           alpha: false,
-          powerPreference: "high-performance"
+          powerPreference: "high-performance",
+          stencil: false,
         }}
         waitForGlobeReady={true}
         animateIn={false}

@@ -36,6 +36,7 @@ export default function TestGlobePage() {
           isInteractive={isInteractive}
           selectedCountries={selectedCountries}
           onCountryClick={handleCountryClick}
+          isHome={false} // página de prueba, no es home
         />
       </div>
 

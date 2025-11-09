@@ -17,6 +17,7 @@ from data_loader import (
 from schemas import (
     ChoroplethEntry,
     KPIStats,
+    KPIStatsBulk,
     TimeSeriesPoint,
     Percapita,
     Ton,
@@ -221,6 +222,50 @@ def ewaste_stats(country: str = Query(...), year: Optional[int] = Query(None)):
         'e_waste_formally_collected_kt': formally_kt,
         'value_recoverable_usd': value,
     }
+
+
+@app.get("/ewaste/stats_multiple", response_model=KPIStatsBulk)
+def ewaste_stats_multiple(countries: List[str] = Query(..., description="Lista de países (repetir parámetro para varios)"), year: Optional[int] = Query(None)):
+    """Devuelve estadísticas (KPI) para varios países en una sola llamada.
+
+    Parámetros:
+    - countries: lista de nombres de países (repetir ?countries=Pais1&countries=Pais2)
+    - year: opcional, filtrar por año
+
+    Respuesta:
+    - rows: lista de KPIStats para los países encontrados
+    - missing: lista de países que no se encontraron en los datos
+    """
+    df = load_df_country_year()
+    if df.empty:
+        df = load_master_normalized()
+
+    rows = []
+    missing = []
+    for country in countries:
+        sel = df[df['country'].str.lower() == country.lower()]
+        if year is not None:
+            sel = sel[sel['year'] == year]
+        if sel.empty:
+            missing.append(country)
+            continue
+        r = sel.iloc[0]
+        ekt = _safe_float(r.get('e_waste_generated_kt') or r.get('E_waste_generated_kt') or r.get('e_waste_generated_kt_x') or r.get('e_waste_generated_kt_y'))
+        percap = _safe_float(r.get('ewaste_generated_kg_inh') or r.get('E_waste_generated_per_capita') or r.get('e_waste_generated_per_capita'))
+        coll_rate = _safe_float(r.get('e_waste_collection_rate') or r.get('E_waste_collection_rate') or r.get('ewaste_management_collection_rate'))
+        formally_kt = _safe_float(r.get('e_waste_formally_collected_kt') or r.get('E_waste_formally_collected_kt') or r.get('ewaste_formally_collected_kg_inh'))
+        value = value_recoverable_usd_from_kt(ekt)
+        rows.append({
+            'country': r.get('country'),
+            'year': int(r['year']) if pd.notna(r.get('year')) else None,
+            'e_waste_generated_kt': ekt,
+            'e_waste_generated_per_capita': percap,
+            'e_waste_collection_rate': coll_rate,
+            'e_waste_formally_collected_kt': formally_kt,
+            'value_recoverable_usd': value,
+        })
+
+    return jsonable_encoder({"rows": rows, "missing": missing})
 
 
 @app.get("/ewaste/time_series", response_model=List[TimeSeriesPoint])

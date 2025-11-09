@@ -1,7 +1,7 @@
 import type { CountryData, EWasteStats } from "@/types";
 
 // Base URL del backend desplegado
-const API_BASE = "https://9q6wqtvz-8000.use.devtunnels.ms";
+const API_BASE = "http://43.230.201.125:60039";
 
 /**
  * Mapeo de códigos ISO a nombres de países (auxiliar para construir las consultas)
@@ -18,13 +18,13 @@ const ISO_TO_COUNTRY_NAME: Record<string, string> = {
   GTM: "Guatemala",
   HND: "Honduras",
   NIC: "Nicaragua",
-  PAN: "Panamá",
-  PER: "Perú",
+  PAN: "Panama",
+  PER: "Peru",
   URY: "Uruguay",
   BRA: "Brasil",
   VEN: "Venezuela",
   ARG: "Argentina",
-  MEX: "México",
+  MEX: "Mexico",
 };
 
 /**

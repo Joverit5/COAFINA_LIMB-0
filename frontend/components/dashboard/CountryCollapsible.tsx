@@ -3,9 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import type { EWasteStats } from "@/types";
 import { CountryMetrics } from "./CountryMetrics";
+import { getCountryName, getTimeSeries } from "@/lib/mock-data";
 import { CountryDataTabs } from "./CountryDataTabs";
-import CountryCharts from "./CountryCharts";
-import { CountryDataTable } from "./CountryDataTable";
+import CountryCharts, { TAB_METRIC_MAP } from "./CountryCharts";
+import lookup from 'country-code-lookup';
 import {
   Collapsible,
   CollapsibleContent,
@@ -30,7 +31,32 @@ export function CountryCollapsible({ data, countryCode, defaultOpen = false, ind
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [selectedTab, setSelectedTab] = useState<"tons" | "percapita" | "collected" | "recoverable" | "market" | "rate">("tons");
   const [showSketch, setShowSketch] = useState(false);
+  const [timeSeriesData, setTimeSeriesData] = useState<any[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Cargar datos de serie temporal
+  useEffect(() => {
+    let mounted = true;
+    
+    const loadTimeSeries = async () => {
+      try {
+        const data = await getTimeSeries(countryCode);
+        if (mounted) {
+          setTimeSeriesData(data
+            .filter((r: { year: number | null }) => r.year !== null && r.year !== undefined)
+            .sort((a: { year: number }, b: { year: number }) => Number(a.year) - Number(b.year)));
+        }
+      } catch (error) {
+        console.error('Error loading time series:', error);
+      }
+    };
+
+    if (isOpen) {
+      loadTimeSeries();
+    }
+
+    return () => { mounted = false; };
+  }, [countryCode, isOpen]);
 
   // Animación de entrada
   useEffect(() => {
@@ -54,30 +80,9 @@ export function CountryCollapsible({ data, countryCode, defaultOpen = false, ind
     );
   }, [index]);
 
-  // Obtener emoji de bandera
-  const getFlagEmoji = (countryCode: string): string => {
-    const iso3ToIso2: Record<string, string> = {
-      COL: "CO",
-      BRA: "BR",
-      VEN: "VE",
-      ARG: "AR",
-      MEX: "MX",
-      CHL: "CL",
-      PER: "PE",
-      ECU: "EC",
-      BOL: "BO",
-      PRY: "PY",
-      URY: "UY",
-    };
-
-    const iso2 = iso3ToIso2[countryCode];
-    if (!iso2) return "🌎";
-
-    const codePoints = iso2
-      .toUpperCase()
-      .split("")
-      .map((char) => 127397 + char.charCodeAt(0));
-    return String.fromCodePoint(...codePoints);
+  const getFlagUrl = (countryCode: string): string => {
+    const country = lookup.byIso(countryCode);
+    return country ? `https://flagcdn.com/w40/${country.iso2.toLowerCase()}.png` : '';
   };
 
   return (
@@ -106,14 +111,18 @@ export function CountryCollapsible({ data, countryCode, defaultOpen = false, ind
           {/* Bandera */}
           <div
             className={cn(
-              "w-12 h-12 rounded-full flex-shrink-0",
+              "w-12 h-12 rounded-full shrink-0",
               "flex items-center justify-center",
               "bg-woodsmoke-800",
               "border-2 border-woodsmoke-700",
               "transition-transform duration-300 hover:scale-110"
             )}
           >
-            <span className="text-2xl">{getFlagEmoji(countryCode)}</span>
+            <span className="text-2xl">{<img 
+                                src={getFlagUrl(countryCode)}
+                                alt={`Bandera de ${getCountryName(countryCode)}`}
+                                className="w-8 h-8 object-cover rounded-full"
+                              />}</span>
           </div>
 
           {/* Nombre del país */}
@@ -130,7 +139,7 @@ export function CountryCollapsible({ data, countryCode, defaultOpen = false, ind
           </div>
 
           {/* Botones de control */}
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center gap-2 shrink-0">
             {/* Toggle del croquis */}
             <div
               onClick={(e) => {
@@ -194,16 +203,53 @@ export function CountryCollapsible({ data, countryCode, defaultOpen = false, ind
           </div>
         )}
 
-        {/* Tabs de datos */}
-        <CountryDataTabs onTabChange={(t) => setSelectedTab(t)} defaultTab={selectedTab} />
+        {/* Layout de dos columnas */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Columna izquierda: Tabs y gráfica */}
+          <div>
+            {/* Tabs de datos */}
+            <CountryDataTabs onTabChange={(t) => setSelectedTab(t)} defaultTab={selectedTab} />
 
-        {/* Gráfica según tab seleccionado */}
-        <div className="mb-6">
-          <CountryCharts countryCode={countryCode} tab={selectedTab} />
+            {/* Gráfica según tab seleccionado */}
+            <div className="mb-6">
+              <CountryCharts countryCode={countryCode} tab={selectedTab} />
+            </div>
+          </div>
+
+          {/* Columna derecha: Tabla de datos */}
+          <div className="bg-woodsmoke-950/60 rounded-md border border-white/10 p-6">
+            <h3 className="font-unbounded text-lg text-white mb-4">Datos Históricos</h3>
+            <div className="overflow-x-auto">
+              {/* Aquí irá la tabla de datos */}
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="border-b-2 border-white/10">
+                    <th className="py-2 px-4 text-left font-unbounded text-xs text-white/60">Año</th>
+                    <th className="py-2 px-4 text-right font-unbounded text-xs text-white/60">Valor</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {timeSeriesData.map((item, index) => {
+                    const value = item[TAB_METRIC_MAP[selectedTab].key];
+                    return (
+                      <tr key={index} className="border-b border-white/5 hover:bg-white/5">
+                        <td className="py-3 px-4 font-sans text-sm text-white/80">{item.year}</td>
+                        <td className="py-3 px-4 font-mono text-sm text-flamingo-400 text-right">
+                          {typeof value === 'number' 
+                            ? value.toLocaleString('es-ES', {
+                                maximumFractionDigits: 2,
+                                minimumFractionDigits: 0
+                              })
+                            : value}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-
-        {/* Tabla de datos */}
-        <CountryDataTable data={data} />
       </CollapsibleContent>
     </Collapsible>
   );

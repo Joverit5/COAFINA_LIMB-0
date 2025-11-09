@@ -46,6 +46,56 @@ interface ConfigurableChartProps {
   transformData?: (data: any[]) => any[];   // Función para transformar datos
 }
 
+// Componente de Tooltip personalizado con estilo oscuro elegante
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (!active || !payload || !payload.length) {
+    return null;
+  }
+
+  return (
+    <div className="rounded-none border-2 border-white/10 overflow-hidden bg-woodsmoke-950/40 backdrop-blur-sm shadow-2xl min-w-[12rem]">
+      {/* Header - similar a TableHead */}
+      {label && (
+        <div className="bg-transparent border-b-2 border-white/10 px-4 py-2">
+          <div className="font-unbounded text-xs text-white uppercase tracking-wider">
+            {label}
+          </div>
+        </div>
+      )}
+      
+      {/* Body - similar a TableBody */}
+      <div>
+        {payload.map((entry: any, index: number) => (
+          <div
+            key={`tooltip-item-${index}`}
+            className="border-b border-white/5 hover:bg-white/5 transition-colors px-4 py-3 last:border-b-0"
+          >
+            <div className="flex items-center justify-between gap-4">
+              {/* Columna izquierda - Indicador + Métrica */}
+              <div className="flex items-center gap-2 flex-1">
+                <div
+                  className="h-2.5 w-2.5 rounded-[2px] shrink-0"
+                  style={{ backgroundColor: entry.color }}
+                />
+                <span className="font-sans text-sm text-white/80">
+                  {entry.name}
+                </span>
+              </div>
+              
+              {/* Columna derecha - Valor */}
+              <span className="font-mono text-sm text-flamingo-400 font-medium text-right tabular-nums whitespace-nowrap">
+                {typeof entry.value === 'number'
+                  ? entry.value.toLocaleString()
+                  : entry.value}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const ConfigurableChart: React.FC<ConfigurableChartProps> = ({
   endpoint,
   chartType = 'line',
@@ -141,14 +191,7 @@ const ConfigurableChart: React.FC<ConfigurableChartProps> = ({
               style={{ fontSize: '12px' }}
             />
             <YAxis stroke="#64748b" style={{ fontSize: '12px' }} />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: '#ffffff',
-                border: '2px solid #e2e8f0',
-                borderRadius: '8px',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-              }}
-            />
+            <Tooltip content={<CustomTooltip />} />
             <Legend wrapperStyle={{ paddingTop: '20px' }} />
             {variables.map((variable) => (
               <Line
@@ -175,14 +218,7 @@ const ConfigurableChart: React.FC<ConfigurableChartProps> = ({
               style={{ fontSize: '12px' }}
             />
             <YAxis stroke="#64748b" style={{ fontSize: '12px' }} />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: '#ffffff',
-                border: '2px solid #e2e8f0',
-                borderRadius: '8px',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-              }}
-            />
+            <Tooltip content={<CustomTooltip />} />
             <Legend wrapperStyle={{ paddingTop: '20px' }} />
             {variables.map((variable) => (
               <Bar
@@ -205,14 +241,7 @@ const ConfigurableChart: React.FC<ConfigurableChartProps> = ({
               style={{ fontSize: '12px' }}
             />
             <YAxis stroke="#64748b" style={{ fontSize: '12px' }} />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: '#ffffff',
-                border: '2px solid #e2e8f0',
-                borderRadius: '8px',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-              }}
-            />
+            <Tooltip content={<CustomTooltip />} />
             <Legend wrapperStyle={{ paddingTop: '20px' }} />
             {variables.map((variable) => (
               <Area
@@ -238,14 +267,7 @@ const ConfigurableChart: React.FC<ConfigurableChartProps> = ({
               style={{ fontSize: '12px' }}
             />
             <YAxis stroke="#64748b" style={{ fontSize: '12px' }} />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: '#ffffff',
-                border: '2px solid #e2e8f0',
-                borderRadius: '8px',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-              }}
-            />
+            <Tooltip content={<CustomTooltip />} />
             <Legend wrapperStyle={{ paddingTop: '20px' }} />
             {variables.map((variable) => (
               <Scatter
@@ -284,7 +306,7 @@ const ConfigurableChart: React.FC<ConfigurableChartProps> = ({
                 />
               ))}
             </Pie>
-            <Tooltip />
+            <Tooltip content={<CustomTooltip />} />
           </PieChart>
         );
 

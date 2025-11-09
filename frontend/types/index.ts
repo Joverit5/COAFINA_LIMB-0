@@ -166,6 +166,7 @@ export interface Globe3DProps {
   selectedCountries: string[];
   onCountryClick?: (countryCode: string) => void;
   className?: string;
+  isHome?: boolean;
 }
 
 // Props del GlobeController

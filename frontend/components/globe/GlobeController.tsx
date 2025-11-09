@@ -15,6 +15,12 @@ export function GlobeController({
   initialView = { lat: -10, lng: -60, altitude: 1.8 },
 }: GlobeControllerProps) {
 
+  // Evita re-aplicar el punto de vista inicial en cada cambio de props.
+  // Queremos que el globo continúe girando desde su posición actual cuando
+  // el usuario hace selecciones; sólo aplicamos el pointOfView una vez al
+  // inicializar el componente.
+  const initializedRef = (globalThis as any).__globe_initialised_ref__ ||= { current: false };
+
   // Configurar rotación automática y punto de vista inicial
   useEffect(() => {
     if (!globeRef.current) return;
@@ -41,8 +47,15 @@ export function GlobeController({
       }
     }
 
-    // Establecer punto de vista inicial más cercano
-    globe.pointOfView(initialView, 0);
+    // Establecer punto de vista inicial más cercano sólo la primera vez.
+    if (!initializedRef.current) {
+      try {
+        globe.pointOfView(initialView, 0);
+      } catch (e) {
+        // Ignorar si pointOfView no está disponible todavía
+      }
+      initializedRef.current = true;
+    }
   }, [globeRef, isInteractive, autoRotateSpeed, initialView]);
 
   // Actualizar cuando cambia el modo interactivo
