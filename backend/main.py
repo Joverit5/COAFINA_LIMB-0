@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import StreamingResponse
+from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
 import io
 import pandas as pd
@@ -25,6 +26,16 @@ from schemas import (
 from utils import value_recoverable_usd_from_kt
 
 app = FastAPI(title="COAFINA E-Waste API", version="0.1")
+
+# Habilitar CORS para permitir peticiones desde el frontend durante desarrollo
+# Ajusta `allow_origins` a orígenes específicos en producción si lo deseas.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/health")
