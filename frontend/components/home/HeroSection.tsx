@@ -86,7 +86,7 @@ export function HeroSection() {
         </h2>
         <p
           ref={subtitleRef}
-          className="font-sans text-base md:text-lg text-flamingo-400 mt-4 ml-2"
+          className="font-sans text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-flamingo-400 mt-4 ml-2"
         >
           Visualización de datos de residuos electrónicos
         </p>
