@@ -1,68 +1,43 @@
 #!/bin/bash
-# ========================================
-# CONFIGURACIÓN AUTOMÁTICA DE FASTAPI + HTTPS (DUCKDNS)
-# Proyecto: COAFINA_LIMB-0/backend
-# ========================================
-
-DOMAIN="api-limb-0.duckdns.org"
-APP_DIR="/home/user/COAFINA_LIMB-0/backend"
-APP_MODULE="main:app"
+=============================================
+🚀 start_fastapi_tunnel.sh
+Levanta FastAPI y crea un túnel HTTPS con Cloudflare
+=============================================
+Ruta al backend (ajusta si tu main.py está en otro lugar)
+APP_PATH="/home/$(whoami)/COAFINA_LIMB-0/backend"
+APP_FILE="main:app"
 PORT=8000
-EMAIL="fabiancquinterop@gmail.com" 
 
-echo "🚀 Iniciando configuración para $DOMAIN"
+echo "============================================="
+echo "🌐 Iniciando servicio FastAPI en el puerto $PORT..."
+echo "============================================="
 
-# --- 1. Actualizar paquetes e instalar dependencias ---
-sudo apt update -y
-sudo apt install -y python3-pip nginx certbot python3-certbot-nginx ufw
+Moverse al directorio del backend
+cd "$APP_PATH" || { echo "❌ No se encontró el directorio $APP_PATH"; exit 1; }
 
-# --- 2. Instalar dependencias de Python ---
-pip install fastapi uvicorn
+Matar cualquier proceso previo de uvicorn (opcional)
+pkill -f "uvicorn" >/dev/null 2>&1
 
-# --- 3. Habilitar firewall ---
-sudo ufw allow 'Nginx Full'
-sudo ufw allow OpenSSH
-sudo ufw allow 8000
-sudo ufw --force enable
+Iniciar FastAPI en segundo plano
+nohup uvicorn "$APP_FILE" --host 0.0.0.0 --port $PORT > fastapi.log 2>&1 &
 
-# --- 4. Crear servicio systemd para FastAPI ---
-SERVICE_FILE="/etc/systemd/system/fastapi.service"
+Esperar unos segundos para asegurar que esté arriba
+sleep 3
 
-sudo bash -c "cat > $SERVICE_FILE" <<EOL
-[Unit]
-Description=FastAPI COAFINA_LIMB-0 backend
-After=network.target
+Verificar si se levantó correctamente
+if pgrep -f "uvicorn" > /dev/null; then
+    echo "✅ FastAPI se está ejecutando correctamente en el puerto $PORT"
+else
+    echo "❌ Error al iniciar FastAPI. Revisa fastapi.log"
+    exit 1
+fi
 
-[Service]
-User=ubuntu
-WorkingDirectory=$APP_DIR
-ExecStart=/usr/bin/python3 -m uvicorn $APP_MODULE --host 0.0.0.0 --port $PORT
-Restart=always
+echo
+echo "============================================="
+echo "🔗 Creando túnel HTTPS con Cloudflare..."
+echo "============================================="
 
-[Install]
-WantedBy=multi-user.target
-EOL
-
-sudo systemctl daemon-reload
-sudo systemctl enable fastapi
-sudo systemctl restart fastapi
-echo "✅ Servicio FastAPI iniciado."
-
-# --- 5. Configurar NGINX ---
-NGINX_FILE="/etc/nginx/sites-available/$DOMAIN"
-
-sudo cp "$APP_DIR/api-limb-0" "$NGINX_FILE"
-sudo ln -sf "$NGINX_FILE" /etc/nginx/sites-enabled/
-sudo nginx -t && sudo systemctl restart nginx
-echo "✅ NGINX configurado correctamente."
-
-# --- 6. Obtener certificados SSL con Let's Encrypt ---
-sudo certbot --nginx -d $DOMAIN --non-interactive --agree-tos -m $EMAIL
-
-# --- 7. Recargar NGINX con SSL activo ---
-sudo systemctl reload nginx
-echo "✅ Certificado SSL generado correctamente."
-
-# --- 8. Mostrar estado final ---
-sudo systemctl status fastapi --no-pager
-echo "🎉 API disponible en: https://$DOMAIN"
+Ejecutar túnel Cloudflare
+cloudflared tunnel --url "http://localhost:$PORT"
+Actualiza el sh
+tenkiu
