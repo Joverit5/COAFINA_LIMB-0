@@ -1,7 +1,7 @@
 import type { CountryData, EWasteStats } from "@/types";
 
 // Base URL del backend desplegado
-const API_BASE = "http://43.230.201.125:60039";
+const API_BASE = "https://cheers-louisiana-april-myspace.trycloudflare.com";
 
 /**
  * Mapeo de códigos ISO a nombres de países (auxiliar para construir las consultas)
