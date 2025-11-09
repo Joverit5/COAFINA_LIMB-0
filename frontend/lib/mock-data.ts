@@ -1,7 +1,7 @@
 import type { CountryData, EWasteStats } from "@/types";
 
 // Base URL del backend desplegado
-const API_BASE = "https://arabic-release-tremendous-ringtone.trycloudflare.com";
+const API_BASE = "https://coafina-limb-0.onrender.com/";
 
 /**
  * Mapeo de códigos ISO a nombres de países (auxiliar para construir las consultas)
